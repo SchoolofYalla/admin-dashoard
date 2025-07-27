@@ -441,6 +441,7 @@ document
 document
   .getElementById("submitPasswordChange")
   .addEventListener("click", async () => {
+    showSpinner();
     const oldPassword = document.getElementById("currentPasswordInput").value;
     const newPassword = document.getElementById("newPasswordInput").value;
     const confirmPassword = document.getElementById(
@@ -451,6 +452,7 @@ document
     passwordChangeError.textContent = "";
 
     if (newPassword !== confirmPassword) {
+      hideSpinner();
       passwordChangeError.textContent = "New passwords do not match.";
       return;
     }
@@ -458,11 +460,13 @@ document
     const user = firebase.auth().currentUser;
 
     if (!user) {
+      hideSpinner();
       passwordChangeError.textContent = "User is not authenticated.";
       return;
     }
 
     try {
+      hideSpinner();
       const credential = firebase.auth.EmailAuthProvider.credential(
         user.email,
         oldPassword
@@ -486,11 +490,14 @@ document
         error.code === "auth/wrong-password" ||
         error.code === "auth/invalid-credential"
       ) {
+        hideSpinner();
         passwordChangeError.textContent = "Your current password is wrong.";
       } else if (error.code === "auth/user-mismatch") {
+        hideSpinner();
         passwordChangeError.textContent =
           "Something went wrong. Please try again.";
       } else {
+        hideSpinner();
         passwordChangeError.textContent =
           "An error occurred. Please try again.";
       }
