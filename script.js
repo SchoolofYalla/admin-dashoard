@@ -1,3 +1,13 @@
+// spinner functions
+
+function showSpinner() {
+  document.getElementById("loadingSpinner").style.display = "flex";
+}
+
+function hideSpinner() {
+  document.getElementById("loadingSpinner").style.display = "none";
+}
+
 // authentication
 const firebaseConfig = {
   apiKey: "AIzaSyBBMSc7ePoc-aysDcbfkkBbcrSb71Fx3ME",
@@ -34,6 +44,7 @@ if ("measurementId" in firebaseConfig) {
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
   loginForm.addEventListener("submit", function (e) {
+    showSpinner();
     e.preventDefault();
 
     const email = document.getElementById("email").value;
@@ -71,6 +82,9 @@ if (loginForm) {
           loginError.textContent =
             "Login failed, Email or Password is invalid. ";
         }
+      })
+      .finally(() => {
+        hideSpinner();
       });
   });
 
@@ -102,6 +116,7 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
+    showSpinner();
     firebase
       .auth()
       .signOut()
@@ -111,6 +126,9 @@ if (logoutBtn) {
       })
       .catch((error) => {
         alert("Error signing out: " + error.message);
+      })
+      .finally(() => {
+        hideSpinner();
       });
   });
 }
