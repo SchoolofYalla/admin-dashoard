@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>School of Yalla | Admin Dashboard</title>
+    <link rel="stylesheet" href="../style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/emoji-button.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+
+    <script src="../script.js" defer></script>
+    <script>
+      // Redirect to auth page if userData is not found in localStorage
+      const userData = JSON.parse(localStorage.getItem("userData"));
+
+      if (!userData || !userData.email || !userData.uid) {
+        window.location.href = "./auth.html";
+      }
+    </script>
+  </head>
+  <body class="dashboard-body">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/SOY Logo 1.png" alt="Logo" class="sidebar-logo" />
+        <h3>School of Yalla</h3>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
+
+        <a href="#" class="dropdown-toggle">
+          <i class="fas fa-users"></i> Users
+          <i class="fas fa-chevron-down dropdown-icon dropdown"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#">User 1</a>
+          <a href="#">User 2</a>
+          <a href="#">User 3</a>
+          <a href="#">User 4</a>
+        </div>
+
+        <a href="#" class="settings-link">
+          <i class="fas fa-cog"></i> Settings
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <h2 id="welcomeMessage"></h2>
+        <div class="admin-actions" style="display: flex; gap: 15px">
+          <a id="changePasswordAction" class="btn-outline">Change Password</a>
+          <a id="logoutBtn" class="btn-outline">Logout</a>
+        </div>
+      </header>
+
+      <section class="dashboard-widgets">
+        <div class="widget">
+          <h3>📅 Calendar</h3>
+          <div class="calendar" id="calendar">
+            <div class="day-header">Sun</div>
+            <div class="day-header">Mon</div>
+            <div class="day-header">Tue</div>
+            <div class="day-header">Wed</div>
+            <div class="day-header">Thu</div>
+            <div class="day-header">Fri</div>
+            <div class="day-header">Sat</div>
+          </div>
+
+          <div class="calendar" id="calendar"></div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal" id="eventModal">
+          <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <form id="eventForm">
+              <!-- <label>Emoji:</label>
+              <input type="text" id="emoji" maxlength="2" required /> -->
+              <div class="emoji-title">
+                <label></label>
+                <div class="emoji-picker-wrapper">
+                  <div id="emojiDisplay" class="emoji-display">😊</div>
+                  <div id="emojiPicker" class="emoji-picker"></div>
+                </div>
+                <input type="hidden" id="emoji" value="😊" required />
+
+                <label></label>
+                <input type="text" id="title" placeholder="New Page" required />
+              </div>
+
+              <label style="padding-top: 20px">To-do List:</label>
+              <div id="todoContainer" style="padding-bottom: 20px">
+                <div class="todo-item">
+                  <input type="checkbox" class="todo-checkbox" />
+                  <input
+                    type="text"
+                    class="todo-input"
+                    placeholder="Enter a task..."
+                  />
+                  <button type="button" class="add-todo-btn">➕</button>
+                  <button type="button" class="remove-todo-btn">➖</button>
+                </div>
+              </div>
+
+              <label></label>
+              <textarea
+                id="notes"
+                placeholder="Text Area"
+                class="auto-expand"
+              ></textarea>
+
+              <input type="hidden" id="eventDate" />
+              <button type="submit" class="add-activity-btn">
+                Add Activity
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="changePasswordDialog" class="dialog-box">
+      <h2 class="dialog-title">Change Your Password</h2>
+      <div class="dialog-body">
+        <input
+          id="currentPasswordInput"
+          type="password"
+          placeholder="Current Password"
+          class="input-field"
+        />
+        <input
+          id="newPasswordInput"
+          type="password"
+          placeholder="New Password"
+          class="input-field"
+        />
+        <input
+          id="confirmNewPasswordInput"
+          type="password"
+          placeholder="Confirm New Password"
+          class="input-field"
+        />
+        <p id="passwordChangeError" class="error-message"></p>
+      </div>
+      <div class="dialog-footer">
+        <button id="submitPasswordChange" class="btn-outline">Confirm</button>
+        <button id="cancelPasswordChange" class="btn-secondary">Cancel</button>
+      </div>
+    </dialog>
+  </body>
+</html>
