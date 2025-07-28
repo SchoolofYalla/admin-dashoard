@@ -44,7 +44,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 // welcomeing user email
 
 document.addEventListener("DOMContentLoaded", () => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userData = JSON.parse(sessionStorage.getItem("userData"));
 
   // Update welcome message if user data is found
   const welcomeEl = document.getElementById("welcomeMessage");
@@ -73,11 +73,11 @@ if (loginForm) {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
-        localStorage.clear();
+        sessionStorage.clear();
         const user = userCredential.user;
 
         // Store user data in localStorage
-        localStorage.setItem(
+        sessionStorage.setItem(
           "userData",
           JSON.stringify({
             email: user.email,
@@ -140,7 +140,7 @@ if (logoutBtn) {
       .auth()
       .signOut()
       .then(() => {
-        localStorage.clear();
+        sessionStorage.clear();
         window.location.href = "auth.html";
       })
       .catch((error) => {
@@ -167,17 +167,17 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //active functionality for the dashboard list
-const allLinks = document.querySelectorAll(".sidebar-nav a");
+// const allLinks = document.querySelectorAll(".sidebar-nav a");
 
-allLinks.forEach((link) => {
-  link.addEventListener("click", function (e) {
-    e.preventDefault();
+// allLinks.forEach((link) => {
+//   link.addEventListener("click", function (e) {
+//     e.preventDefault();
 
-    allLinks.forEach((l) => l.classList.remove("active"));
+//     allLinks.forEach((l) => l.classList.remove("active"));
 
-    this.classList.add("active");
-  });
-});
+//     this.classList.add("active");
+//   });
+// });
 
 // dashboard 3rd party calendar
 document.addEventListener("DOMContentLoaded", function () {

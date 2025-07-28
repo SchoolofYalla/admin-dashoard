@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>School of Yalla | Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/emoji-button.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+
+    <script src="script.js" defer></script>
+    <script>
+      // Redirect to auth page if userData is not found in localStorage
+      const userData = JSON.parse(sessionStorage.getItem("userData"));
+
+      if (!userData || !userData.email || !userData.uid) {
+        window.location.href = "./auth.html";
+      }
+    </script>
+  </head>
+  <body class="dashboard-body">
+    <div id="loadingSpinner" class="spinner-overlay" style="display: none">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/SOY Logo 1.png" alt="Logo" class="sidebar-logo" />
+        <h3>School of Yalla</h3>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="#" class="active"><i class="fas fa-home"></i> User Data</a>
+
+        <a href="#" class="dropdown-toggle">
+          <i class="fas fa-users"></i> Users
+          <i class="fas fa-chevron-down dropdown-icon dropdown"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#">User 1</a>
+          <a href="#">User 2</a>
+          <a href="#">User 3</a>
+          <a href="#">User 4</a>
+        </div>
+
+        <a href="#" class="settings-link">
+          <i class="fas fa-cog"></i> Settings
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <h2 id="welcomeMessage">Welcome, Admin</h2>
+        <div class="admin-actions" style="display: flex; gap: 15px">
+          <a id="logoutBtn" class="btn-outline">Logout</a>
+        </div>
+      </header>
+
+      <section class="dashboard-overview">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+          "
+        >
+          <h3>👥 Users</h3>
+          <button class="btn-outline" onclick="openUserModal()">
+            ➕ Create New User
+          </button>
+        </div>
+
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Country</th>
+              <th>Class Day</th>
+              <th>Class Time</th>
+              <th>Class</th>
+              <th>Teacher</th>
+              <th>Package</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <!-- Dynamic rows will go here -->
+            <tr>
+              <td>Ali Ahmad</td>
+              <td>Jordan</td>
+              <td>Monday</td>
+              <td>5:00 PM</td>
+              <td>A</td>
+              <td>Mr. Tarek</td>
+              <td>Basic</td>
+              <td>
+                <button class="btn-outline" onclick="editUser(this)">
+                  Edit
+                </button>
+                <button class="btn-outline" onclick="deleteUser(this)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <!-- Add more rows dynamically -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Modal Dialog -->
+      <dialog id="userModal" style="padding: 2rem; border-radius: 8px">
+        <h3 id="modalTitle">Create New User</h3>
+        <form id="userForm">
+          <input type="text" placeholder="Name" required /><br />
+          <input type="text" placeholder="Country" required /><br />
+          <input type="text" placeholder="Class Day" required /><br />
+          <input type="text" placeholder="Class Time" required /><br />
+          <input type="text" placeholder="Class" required /><br />
+          <input type="text" placeholder="Teacher" required /><br />
+          <input type="text" placeholder="Package" required /><br />
+          <div
+            style="
+              margin-top: 1rem;
+              display: flex;
+              gap: 10px;
+              justify-content: flex-end;
+            "
+          >
+            <button type="submit" class="btn-outline">Save</button>
+            <button
+              type="button"
+              class="btn-outline"
+              onclick="closeUserModal()"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </dialog>
+    </main>
+  </body>
+</html>

@@ -17,7 +17,7 @@
     <script src="script.js" defer></script>
     <script>
       // Redirect to auth page if userData is not found in localStorage
-      const userData = JSON.parse(localStorage.getItem("userData"));
+      const userData = JSON.parse(sessionStorage.getItem("userData"));
 
       if (!userData || !userData.email || !userData.uid) {
         window.location.href = "./auth.html";
@@ -37,6 +37,7 @@
       </div>
       <nav class="sidebar-nav">
         <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="user-data.html"><i class="fas fa-home"></i> User Data</a>
 
         <a href="#" class="dropdown-toggle">
           <i class="fas fa-users"></i> Users
@@ -77,8 +78,6 @@
             <div class="day-header">Fri</div>
             <div class="day-header">Sat</div>
           </div>
-
-          <div class="calendar" id="calendar"></div>
         </div>
 
         <!-- Modal -->
