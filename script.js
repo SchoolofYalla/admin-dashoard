@@ -1,11 +1,25 @@
-// spinner functions
+let firebaseInitialized = false;
+let currentUser = null;
 
+// spinner functions
 function showSpinner() {
+  const dialog = document.getElementById("changePasswordDialog");
+  if (dialog && dialog.open) {
+    dialog.close(); // temporarily close it to prevent it from overlapping
+    dialog.setAttribute("data-reopen", "true"); // remember to reopen
+  }
+
   document.getElementById("loadingSpinner").style.display = "flex";
 }
 
 function hideSpinner() {
   document.getElementById("loadingSpinner").style.display = "none";
+
+  const dialog = document.getElementById("changePasswordDialog");
+  if (dialog && dialog.getAttribute("data-reopen") === "true") {
+    dialog.removeAttribute("data-reopen");
+    dialog.showModal();
+  }
 }
 
 // authentication
@@ -21,6 +35,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+firebase.auth().onAuthStateChanged(function (user) {
+  firebaseInitialized = true;
+  currentUser = user;
+});
 
 // welcomeing user email
 
@@ -441,7 +460,6 @@ document
 document
   .getElementById("submitPasswordChange")
   .addEventListener("click", async () => {
-    showSpinner();
     const oldPassword = document.getElementById("currentPasswordInput").value;
     const newPassword = document.getElementById("newPasswordInput").value;
     const confirmPassword = document.getElementById(
@@ -450,30 +468,39 @@ document
 
     passwordChangeError.style.color = "red";
     passwordChangeError.textContent = "";
+    showSpinner();
 
     if (newPassword !== confirmPassword) {
-      hideSpinner();
       passwordChangeError.textContent = "New passwords do not match.";
+      hideSpinner();
+      return;
+    }
+    if (oldPassword === confirmPassword || oldPassword === newPassword) {
+      passwordChangeError.textContent = "You need to enter a new password.";
+      hideSpinner();
+      return;
+    }
+    if (!firebaseInitialized) {
+      passwordChangeError.textContent =
+        "Please wait, authentication is initializing...";
+      hideSpinner();
       return;
     }
 
-    const user = firebase.auth().currentUser;
-
-    if (!user) {
+    if (!currentUser) {
+      passwordChangeError.textContent = "You are not signed in.";
       hideSpinner();
-      passwordChangeError.textContent = "User is not authenticated.";
       return;
     }
 
     try {
-      hideSpinner();
       const credential = firebase.auth.EmailAuthProvider.credential(
-        user.email,
+        currentUser.email,
         oldPassword
       );
 
-      await user.reauthenticateWithCredential(credential);
-      await user.updatePassword(newPassword);
+      await currentUser.reauthenticateWithCredential(credential);
+      await currentUser.updatePassword(newPassword);
 
       passwordChangeError.style.color = "green";
       passwordChangeError.textContent = "Password updated successfully.";
@@ -490,17 +517,16 @@ document
         error.code === "auth/wrong-password" ||
         error.code === "auth/invalid-credential"
       ) {
-        hideSpinner();
         passwordChangeError.textContent = "Your current password is wrong.";
       } else if (error.code === "auth/user-mismatch") {
-        hideSpinner();
         passwordChangeError.textContent =
           "Something went wrong. Please try again.";
       } else {
-        hideSpinner();
         passwordChangeError.textContent =
           "An error occurred. Please try again.";
       }
+    } finally {
+      hideSpinner();
     }
   });
 

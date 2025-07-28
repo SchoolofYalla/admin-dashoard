@@ -806,17 +806,21 @@ dialog::backdrop {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* On top of everything */
+  z-index: 99999999 !important; /* On top of everything */
 }
 
-/* The spinner circle */
+#loadingSpinner {
+  z-index: 999999999999999 !important;
+}
+
 .spinner {
-  border: 6px solid #1a1a1a; /* Light gray */
-  border-top: 6px solid #f7d244; /* Blue */
+  border: 6px solid #1a1a1a;
+  border-top: 6px solid #f7d244;
   border-radius: 50%;
   width: 75px;
   height: 75px;
   animation: spin 1s linear infinite;
+  z-index: 999999999999999 !important;
 }
 
 /* Spinner animation */
